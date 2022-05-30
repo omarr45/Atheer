@@ -78,6 +78,15 @@ class LightStemmer(Stemmer):
             # فعالى
             if token[2] == script.ALEF and token[4] == script.ALEF_MAKSURA:
                 return token[0] + token[1] + token[3]
+            # فعلان
+            if token[3] == script.ALEF and token[4] == script.NOON:
+                return token[0] + token[1] + token[2]
+            # فعلاء
+            if token[3] == script.ALEF and token[4] == script.HAMZA:
+                return token[0] + token[1] + token[2]
+            # فعلاء
+            if token[2] == script.WAW and token[4] == script.TEH_MARBUTA:
+                return token[0] + token[1] + token[3]
         elif len(token) == 6:
             # مفعلون
             if token[0] == script.MEEM and token[4] == script.WAW and token[5] == script.NOON:
@@ -90,6 +99,9 @@ class LightStemmer(Stemmer):
                 return token[1] + token[2] + token[3]
             # مستفعل
             if token[0] == script.MEEM and token[1] == script.SEEN and token[2] == script.TEH:
+                return token[3] + token[4] + token[5]
+            # استفعل
+            if token[0] == script.ALEF and token[1] == script.SEEN and token[2] == script.TEH:
                 return token[3] + token[4] + token[5]
             # متفاعل
             if token[0] == script.MEEM and token[1] == script.TEH and token[3] == script.ALEF:
@@ -119,7 +131,37 @@ class LightStemmer(Stemmer):
             if token[0] == script.YEH and token[4] == script.WAW and token[5] == script.NOON:
                 return token[1] + token[2] + token[3]
         elif len(token) == 7:
-            return token
+            # مفاعلون
+            if token[0] == script.MEEM and token[2] == script.ALEF and token[5] == script.WAW and token[6] == script.NOON:
+                return token[1] + token[3] + token[4]
+            # مفاعلات
+            if token[0] == script.MEEM and token[2] == script.ALEF and token[5] == script.ALEF and token[6] == script.TEH:
+                return token[1] + token[3] + token[4]
+            # تفاعلان
+            if token[0] == script.TEH and token[2] == script.ALEF and token[5] == script.ALEF and token[6] == script.NOON:
+                return token[1] + token[3] + token[4]
+            # تفعيلات
+            if token[0] == script.TEH and token[3] == script.YEH and token[5] == script.ALEF and token[6] == script.TEH:
+                return token[1] + token[2] + token[4]
+            # فعالتان
+            if token[2] == script.ALEF and token[4] == script.TEH and token[5] == script.ALEF and token[6] == script.NOON:
+                return token[0] + token[1] + token[3]
+            # فعالتين
+            if token[2] == script.ALEF and token[4] == script.TEH and token[5] == script.YEH and token[6] == script.NOON:
+                return token[0] + token[1] + token[3]
+        elif len(token) == 8:
+            # مستفعلات
+            if token[0] == script.MEEM and token[1] == script.SEEN and token[2] == script.TEH and token[6] == script.ALEF and token[7] == script.TEH:
+                return token[3] + token[4] + token[5]
+            # مستفعلون
+            if token[0] == script.MEEM and token[1] == script.SEEN and token[2] == script.TEH and token[6] == script.WAW and token[7] == script.NOON:
+                return token[3] + token[4] + token[5]
+            # مستفعلين
+            if token[0] == script.MEEM and token[1] == script.SEEN and token[2] == script.TEH and token[6] == script.YEH and token[7] == script.NOON:
+                return token[3] + token[4] + token[5]
+            # متفاعلات
+            if token[0] == script.MEEM and token[1] == script.TEH and token[3] == script.ALEF and token[6] == script.ALEF and token[7] == script.TEH:
+                return token[2] + token[4] + token[5]
         # token = LightStemmer.stem_token(token, full=False)
         return token
 
