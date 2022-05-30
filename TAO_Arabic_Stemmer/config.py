@@ -14,8 +14,8 @@ Add_SPACE_after_TEH_MARBUTA = True
 
 remove_diacritics = True
 
-replace_TEH_MARBUTA = True
-replace_ALEF_MAKSURA = True
+replace_TEH_MARBUTA = False
+replace_ALEF_MAKSURA = False
 
 
 remove_nonArabic_word = True
@@ -44,4 +44,3 @@ segmenter = 0
 stemmer = 0
 # Lemmatization
 lemmatizer = 0
-
