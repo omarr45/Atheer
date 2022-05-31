@@ -17,6 +17,44 @@ class LightStemmer():
                     u"سكرتير", u"سكرتيرة", u"الى", u"معهم"]
 
     @staticmethod
+    def get_stem(token, full=False):
+        token = Arabic_normalization.normalize_token(token)
+
+        if not script.is_arabic_word(token):
+            return token
+
+        if len(token) > 3 and token[:1] == script.WAW:
+            token = token[1:]
+
+        if token in LightStemmer.saved_tokens:
+            return token
+
+        wordlen = len(token)
+
+        for pref in LightStemmer.proposed_prefixes:
+            length = len(pref)
+            if (wordlen > length + 1) and (token[:length] == pref):
+                if(full):
+                    token = token[:length] + '+' + token[length:]
+                else:
+                    token = token[length:]
+                break
+
+        if len(token) > 3:
+            wordlen = len(token)
+            for suf in LightStemmer.proposed_suffixes:
+                suflen = len(suf)
+                if (wordlen > len(suf) + 1) and token.endswith(suf):
+                    if (full):
+                        token = token[:wordlen - suflen] + \
+                            '+' + token[wordlen-suflen:]
+                    else:
+                        token = token[:wordlen - suflen]
+                    wordlen = len(token)
+
+        return token
+
+    @staticmethod
     def get_root(token):
 
         # Get all أإآ to be ا for easier implementation
@@ -192,44 +230,6 @@ class LightStemmer():
                 return token[2] + token[4] + token[5]
 
         token = LightStemmer.get_stem(token, full=False)
-        return token
-
-    @staticmethod
-    def get_stem(token, full=False):
-        token = Arabic_normalization.normalize_token(token)
-
-        if not script.is_arabic_word(token):
-            return token
-
-        if len(token) > 3 and token[:1] == script.WAW:
-            token = token[1:]
-
-        if token in LightStemmer.saved_tokens:
-            return token
-
-        wordlen = len(token)
-
-        for pref in LightStemmer.proposed_prefixes:
-            length = len(pref)
-            if (wordlen > length + 1) and (token[:length] == pref):
-                if(full):
-                    token = token[:length] + '+' + token[length:]
-                else:
-                    token = token[length:]
-                break
-
-        if len(token) > 3:
-            wordlen = len(token)
-            for suf in LightStemmer.proposed_suffixes:
-                suflen = len(suf)
-                if (wordlen > len(suf) + 1) and token.endswith(suf):
-                    if (full):
-                        token = token[:wordlen - suflen] + \
-                            '+' + token[wordlen-suflen:]
-                    else:
-                        token = token[:wordlen - suflen]
-                    wordlen = len(token)
-
         return token
 
 

@@ -1,4 +1,4 @@
-from TAO_Arabic_Stemmer.stemming import LightStemmer
+from .stemming import LightStemmer
 
 
 def tokenize(text):
