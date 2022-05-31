@@ -1,20 +1,8 @@
-#!/usr/bin/python
-# -*- coding:utf-8 -*-
-'''
-created on 2014 Mar 28
-by disooqi
-'''
 from . import script
 from .normalization import Arabic_normalization
 
 
-class Stemmer:
-
-    def __init__(self):
-        pass
-
-
-class LightStemmer(Stemmer):
+class LightStemmer():
     light_prefixes = (u"بال", u"وال", u"كال", u"فال", u"لل", u"ال",)
     light_suffixes = (u"ون", u"ين", u"وا", u"ات", u"ان", u"ها")
 
@@ -24,20 +12,18 @@ class LightStemmer(Stemmer):
     proposed_suffixes = (u"ات", u"ون", u"هما", u"كما", u"ين", u"ان", u"وا",
                          u"ها", u"تا", u"تم", u"تن", u"كن", u"هن", u"ه", u"ي", u"ك", u"هم", u"ت",)
 
+    # Tokens that are mis-stemmed by the algorithm
     saved_tokens = [u"كتاب", u"وجه", u"كريه",
                     u"سكرتير", u"سكرتيرة", u"الى", u"معهم"]
-
-    def __init__(self):
-        Stemmer.__init__(self)
 
     @staticmethod
     def get_root(token):
 
         # Get all أإآ to be ا for easier implementation
-        # Removes diacritics
+        # Removes diacritics and punctuations
         token = Arabic_normalization.normalize_token(token)
-        # remove light affixes:
 
+        # remove light affixes:
         # a) prefixes
         for pref in LightStemmer.light_prefixes:
             length = len(pref)
@@ -61,7 +47,6 @@ class LightStemmer(Stemmer):
             # صلة
             if token[2] == script.TEH_MARBUTA:
                 return u"و" + token[0:2]
-            # ادع
             return token
 
         elif len(token) == 4:
@@ -206,13 +191,14 @@ class LightStemmer(Stemmer):
             if token[0] == script.MEEM and token[1] == script.TEH and token[3] == script.ALEF and token[6] == script.ALEF and token[7] == script.TEH:
                 return token[2] + token[4] + token[5]
 
-        token = LightStemmer.stem_token(token, full=False)
+        token = LightStemmer.get_stem(token, full=False)
         return token
 
     @staticmethod
-    def stem_token(token, full=False):
-        ''' The method takes a valid Arabic word as a parameter and return a stemmed term '''
-        if not script.isArabicword(token):
+    def get_stem(token, full=False):
+        token = Arabic_normalization.normalize_token(token)
+
+        if not script.is_arabic_word(token):
             return token
 
         if len(token) > 3 and token[:1] == script.WAW:
@@ -221,7 +207,6 @@ class LightStemmer(Stemmer):
         if token in LightStemmer.saved_tokens:
             return token
 
-        length = 0
         wordlen = len(token)
 
         for pref in LightStemmer.proposed_prefixes:
@@ -233,8 +218,6 @@ class LightStemmer(Stemmer):
                     token = token[length:]
                 break
 
-        # repeat 3 times on suffix (يكتبونها)
-        # for _ in range(3):
         if len(token) > 3:
             wordlen = len(token)
             for suf in LightStemmer.proposed_suffixes:

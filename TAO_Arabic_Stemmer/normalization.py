@@ -1,17 +1,8 @@
-#!/usr/bin/python
-# -*- coding:utf-8 -*-
-'''
-created on 2014 Mar 28
-by disooqi
-'''
 from . import config
 from .script import *
 
-#:)
-
 
 class Arabic_normalization:
-    # this is a class variable
 
     norm_table = {ALEF_MADDA: ALEF,
                   ALEF_HAMZA_ABOVE: ALEF,
@@ -47,70 +38,8 @@ class Arabic_normalization:
                   NINE: ar_NINE,
                   }
 
-    punctuation_norm_table = {
-        en_QUESTION: ar_QUESTION,
-        en_SEMICOLON: ar_SEMICOLON,
-        en_COMMA: ar_COMMA,
-        en_FULL_STOP: ar_FULL_STOP,
-        en_PERCENT: ar_PERCENT,
-        ar_DECIMAL: ar_DECIMAL,
-        EXCLAMATION: EXCLAMATION,
-
-        Leftpointing_double_angle_quotation_mark: en_QUOTATION,
-        Rightpointing_double_angle_quotation_mark: en_QUOTATION,
-        Left_double_quotation_mark: en_QUOTATION,
-        Right_double_quotation_mark: en_QUOTATION,
-        # en_Less_than:en_QUOTATION,
-        # en_Greater_than:en_QUOTATION,
-        ar_STAR: u'',
-        ASTERISK: u'',
-        BULLET: u'',
-        en_EQUALS_SIGN: u'',
-        MIDDLE_DOT: ar_FULL_STOP,
-    }
-
-    # constructor method
-
-    def __init__(self):
-        # Any thing after 'self.' is an attribute of the "object"
-        #self.y = x
-
-        # this is how to access the class variable inside the class
-        Arabic_normalization.variable += 1
-
-        # this a wrong way to access the class variable
-        # variable += 1
-
-    def __str__(self):
-        return 'trying'
-
-    def __del__(self):
-        pass
-
-    # class method (also, static method), i.e. accessed using class name
-    # not the object
-    @staticmethod
-    def normalize_sentence(line):
-
-        for ch in PUNCTUATIONS:
-            line = line.replace(ch, SPACE)
-
-        tokens = line.strip().split()
-
-        terms = list()
-        for token in tokens[:]:
-            term = Arabic_normalization.normalize_token(token)
-            if term.strip():
-                terms.append(term)
-
-        return ' '.join(terms)
-
-    # you could use the following line instead of @staticmethod decorator
-    #normalize_line = staticmethod(normalize_line)
-
     @staticmethod
     def normalize_token(token):
-        ''' a token could be a single word, a multiword expression, or a named entity '''
 
         for ch in PUNCTUATIONS:
             token = token.replace(ch, '')

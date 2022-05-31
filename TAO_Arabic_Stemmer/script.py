@@ -1,9 +1,3 @@
-#!/usr/bin/python
-# -*- coding:utf-8 -*-
-'''
-created on 2014 Mar 28
-by disooqi
-'''
 import re
 
 SPACE = u'\u0020'
@@ -348,52 +342,27 @@ PUNCTUATIONS = (ar_COMMA, ar_SEMICOLON, ar_QUESTION, ar_PERCENT, ar_DECIMAL,
                 BACKSLASH, RIGHT_SQUARE_BRACKET, CIRCUMFLEX_ACCENT, UNDERSCORE,
                 GRAVE_ACCENT, LEFT_CURLY_BRACKET, VERTICAL_LINE,
                 RIGHT_CURLY_BRACKET, TILDE, Leftpointing_double_angle_quotation_mark,
-                MIDDLE_DOT, Rightpointing_double_angle_quotation_mark)  # APOSTROPHE
-
-##
-# punc_to_remove = (ar_COMMA, ar_SEMICOLON, ar_QUESTION, ar_PERCENT, ar_DECIMAL,
-##                  ar_THOUSANDS, ar_FULL_STOP, EXCLAMATION, en_QUOTATION, NUMBER_SIGN,
-##                  DOLLAR_SIGN, en_PERCENT,
-##                  AMPERSAND, APOSTROPHE, LEFT_PARENTHESIS, RIGHT_PARENTHESIS,
-##                  ASTERISK, PLUS_SIGN, en_COMMA, HYPHEN_MINUS, en_FULL_STOP,
-##                  SLASH, en_COLON, en_SEMICOLON, en_LESS_THAN, en_EQUALS_SIGN,
-##                  en_GREATER_THAN, en_QUESTION, COMMERCIAL_AT, LEFT_SQUARE_BRACKET,
-##                  BACKSLASH, RIGHT_SQUARE_BRACKET, CIRCUMFLEX_ACCENT, UNDERSCORE,
-##                  GRAVE_ACCENT, LEFT_CURLY_BRACKET, VERTICAL_LINE,
-# RIGHT_CURLY_BRACKET, TILDE)
+                MIDDLE_DOT, Rightpointing_double_angle_quotation_mark)
 
 
-def isHaraka(archar):
-    """Checks for Arabic Harakat Marks (FATHA,DAMMA,KASRA,SUKUN,TANWIN).
-    @param archar: arabic unicode char
-    @type archar: unicode
-    """
-    if archar in HARAKAT:
-        return True
-    else:
-        return False
+def is_haraka(archar):
+    return archar in HARAKAT
 
 
-def isArabicword(word):
-    """ Checks for an valid Arabic  word.
-    An Arabic word not contains spaces, digits and pounctuation
-    avoid some spelling error,  TEH_MARBUTA must be at the end.
-    @param word: input word
-    @type word: unicode
-    @return: True if all charaters are in Arabic block
-    @rtype: Boolean
-    """
+def is_arabic_word(word):
+
     if len(word) == 0:
         return False
     # searches for any non-Arabic character in a word
     elif re.search(u"([^\u0600-\u0652%s%s%s])" % (LAM_ALEF, LAM_ALEF_HAMZA_ABOVE, LAM_ALEF_MADDA_ABOVE), word):
         return False
     # word can't start with a haraka
-    elif isHaraka(word[0]) or word[0] in (WAW_HAMZA, YEH_HAMZA):
+    elif is_haraka(word[0]) or word[0] in (WAW_HAMZA, YEH_HAMZA):
         return False
-    #  if Teh Marbuta or Alef_Maksura not in the end
+    # if Alef_Maksura not in the end
     elif re.match(u"^(.)*[%s](.)+$" % ALEF_MAKSURA, word):
         return False
+    # if Teh_Marbuta not in the end
     elif re.match(u"^(.)*[%s]([^%s%s%s])(.)+$" % (TEH_MARBUTA, DAMMA, KASRA, FATHA), word):
         return False
     else:
