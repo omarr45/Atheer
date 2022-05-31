@@ -3,17 +3,17 @@ from .normalization import Arabic_normalization
 
 
 class LightStemmer():
-    light_prefixes = (u"بال", u"وال", u"كال", u"فال", u"لل", u"ال",)
+    light_prefixes = (u"بال", u"وال", u"كال", u"فال", u"لل", u"ال")
     light_suffixes = (u"ون", u"ين", u"وا", u"ات", u"ان", u"ها")
 
     proposed_prefixes = (u"بال", u"وال", u"كال", u"فال", u"لل",
                          u"ل", u"و", u"ال", u"ك", u"ب", u"ف", u"س",)
 
     proposed_suffixes = (u"ات", u"ون", u"هما", u"كما", u"ين", u"ان", u"وا",
-                         u"ها", u"تا", u"تم", u"تن", u"كن", u"هن", u"ه", u"ي", u"ك", u"هم", u"ت",)
+                         u"ها", u"تا", u"تم", u"تن", u"كن", u"هن", u"ه", u"ي", u"ك", u"هم", u"ت", u"ا")
 
     # Tokens that are mis-stemmed by the algorithm
-    saved_tokens = [u"كتاب", u"وجه", u"كريه",
+    saved_tokens = [u"كتاب",  u"كريه", u"حبة",
                     u"سكرتير", u"سكرتيرة", u"الى", u"معهم"]
 
     @staticmethod
@@ -23,7 +23,10 @@ class LightStemmer():
         if not script.is_arabic_word(token):
             return token
 
-        if len(token) > 3 and token[:1] == script.WAW:
+        if len(token) == 3:
+            return token
+
+        if len(token) > 3 and token[0] == script.WAW:
             token = token[1:]
 
         if token in LightStemmer.saved_tokens:
@@ -56,7 +59,6 @@ class LightStemmer():
 
     @staticmethod
     def get_root(token):
-
         # Get all أإآ to be ا for easier implementation
         # Removes diacritics and punctuations
         token = Arabic_normalization.normalize_token(token)
@@ -80,6 +82,17 @@ class LightStemmer():
 
         if token in LightStemmer.saved_tokens:
             return token
+
+        newToken = LightStemmer.get_taf3eela(token)
+
+        if len(token) > 3 and token.__eq__(newToken):
+            newToken = LightStemmer.get_stem(token)
+            newToken = LightStemmer.get_taf3eela(
+                LightStemmer.get_stem(newToken))
+        return newToken
+
+    @staticmethod
+    def get_taf3eela(token):
 
         if len(token) == 3:
             # صلة
@@ -114,9 +127,21 @@ class LightStemmer():
             # مفاعل
             if token[0] == script.MEEM and token[2] == script.ALEF:
                 return token[1] + token[3] + token[4]
+            # مفتعل
+            if token[0] == script.MEEM and token[2] == script.TEH:
+                return token[1] + token[3] + token[4]
+            # فاعلة
+            if token[1] == script.ALEF and token[4] == script.TEH_MARBUTA:
+                return token[0] + token[2] + token[3]
             # افتعل
             if token[0] == script.ALEF and token[2] == script.TEH:
                 return token[1] + token[3] + token[4]
+            # يفتعل
+            if token[0] == script.YEH and token[2] == script.TEH:
+                return token[1] + token[3] + token[4]
+            # يتفعل
+            if token[0] == script.YEH and token[1] == script.TEH:
+                return token[2] + token[3] + token[4]
             # افعال
             if token[0] == script.ALEF and token[3] == script.ALEF:
                 return token[1] + token[2] + token[4]
@@ -135,6 +160,9 @@ class LightStemmer():
             # فعالة
             if token[2] == script.ALEF and token[4] == script.TEH_MARBUTA:
                 return token[0] + token[1] + token[3]
+            # فعيلة
+            if token[2] == script.YEH and token[4] == script.TEH_MARBUTA:
+                return token[0] + token[1] + token[3]
             # فعالى
             if token[2] == script.ALEF and token[4] == script.ALEF_MAKSURA:
                 return token[0] + token[1] + token[3]
@@ -147,6 +175,9 @@ class LightStemmer():
             # فعلاء
             if token[2] == script.WAW and token[4] == script.TEH_MARBUTA:
                 return token[0] + token[1] + token[3]
+            # تفعيل
+            if token[0] == script.TEH and token[3] == script.YEH:
+                return token[1] + token[2] + token[4]
 
         elif len(token) == 6:
             # مفعلون
@@ -229,7 +260,6 @@ class LightStemmer():
             if token[0] == script.MEEM and token[1] == script.TEH and token[3] == script.ALEF and token[6] == script.ALEF and token[7] == script.TEH:
                 return token[2] + token[4] + token[5]
 
-        token = LightStemmer.get_stem(token, full=False)
         return token
 
 
