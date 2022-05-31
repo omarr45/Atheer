@@ -113,7 +113,7 @@ class Arabic_normalization:
         ''' a token could be a single word, a multiword expression, or a named entity '''
 
         for ch in PUNCTUATIONS:
-            token = token.replace(ch, SPACE)
+            token = token.replace(ch, '')
 
         term = list()
         for char in token:

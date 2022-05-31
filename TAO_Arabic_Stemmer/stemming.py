@@ -15,7 +15,8 @@ class Stemmer:
 
 
 class LightStemmer(Stemmer):
-    al_prefixes = (u"بال", u"وال", u"كال", u"فال", u"لل", u"ال",)
+    light_prefixes = (u"بال", u"وال", u"كال", u"فال", u"لل", u"ال",)
+    light_suffixes = (u"ون", u"ين", u"وا", u"ات", u"ان", u"ها")
 
     proposed_prefixes = (u"بال", u"وال", u"كال", u"فال", u"لل",
                          u"ل", u"و", u"ال", u"ك", u"ب", u"ف", u"س",)
@@ -35,13 +36,23 @@ class LightStemmer(Stemmer):
         # Get all أإآ to be ا for easier implementation
         # Removes diacritics
         token = Arabic_normalization.normalize_token(token)
+        # remove light affixes:
 
-        # remove alef lam(s)
-        for pref in LightStemmer.al_prefixes:
+        # a) prefixes
+        for pref in LightStemmer.light_prefixes:
             length = len(pref)
             if (len(token) > length + 1) and (token[:length] == pref):
                 token = token[length:]
                 break
+
+        # b) suffixes
+        if len(token) > 3:
+            wordlen = len(token)
+            for suf in LightStemmer.light_suffixes:
+                suflen = len(suf)
+                if (wordlen > len(suf) + 1) and token.endswith(suf):
+                    token = token[:wordlen - suflen]
+                    wordlen = len(token)
 
         if token in LightStemmer.saved_tokens:
             return token
@@ -51,8 +62,6 @@ class LightStemmer(Stemmer):
             if token[2] == script.TEH_MARBUTA:
                 return u"و" + token[0:2]
             # ادع
-            if token[0] == script.ALEF:
-                return token[1:] + u"و"
             return token
 
         elif len(token) == 4:
