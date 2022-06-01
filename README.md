@@ -1,6 +1,6 @@
 # ✨ Atheer
 
-### Check the demo [here](www.atheer.ml)
+### Check the demo [here](https://www.atheer.ml)
 
 <hr>
 
