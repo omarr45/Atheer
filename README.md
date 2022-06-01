@@ -27,3 +27,11 @@
 As you can see, the *stemming* gives less accuracy as it's just based on removing affixes (prefixes & suffixes).
 <br>
 On the other hand, *rooting/lemmatization* gives better accuracy as it works in the background based upon the Taf3eela-تفعيلة system in the Arabic language.
+
+
+<br>
+
+## Contributors
+
+* Omar AbdulRahman [@omarr45](https://github.com/omarr45)
+* Ahmed Tawfik [@fine-simple](https://github.com/fine-simple)
