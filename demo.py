@@ -1,11 +1,11 @@
 # -*- coding: UTF-8 -*-
 
-from TAO_Arabic_Stemmer import TAOstemmer
+from ATHEER_Arabic_Stemmer import AtheerStemmer
 
 string = 'وَقَفَ الطُّلابُ في صُفوفٍ مُرَتَّبَةٍ، ثُمَّ خَرَجوا إلى حَقْلٍ قَرِيبٍ. أَخَذوا مَعَهُمْ غِراسَ التّينِ والخَوْخِ، حَفَرَ الطُّلابُ الأَرْضَ وَزَرَعوا الغِرَاسَ، ثمَّ سَقَوْها المَاءَ. عادَ الطُّلابُ إلى المَدْرَسَةِ مسرورين.'
 
-# stems_list = TAOstemmer.text2stem(string, full=False)
-stems_list = TAOstemmer.text2root(string)
+# stems_list = AtheerStemmer.text2stem(string, full=False)
+stems_list = AtheerStemmer.text2root(string)
 
 file = open('output.txt', 'w+', encoding="utf-8")
 
